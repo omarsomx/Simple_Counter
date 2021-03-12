@@ -9,12 +9,13 @@ export function Card(props) {
 	return (
 		<div className="card bg-dark text-light m-0 text-center">
 			<div className="card-body">
-				<h2>{props.number}</h2>
+				<h2>{props.icon ? props.icon : props.contenido}</h2>
 			</div>
 		</div>
 	);
 }
 
 Card.propTypes = {
-	number: Proptypes.string
+	contenido: Proptypes.number,
+	icon: Proptypes.element
 };

@@ -3,74 +3,87 @@ import { Card } from "./cards.js";
 
 //create your first component
 export function Home() {
-	const [myInterval, setMyInterval] = useState(null);
-	const [digito1, setDigito1] = useState(0);
-	const [digito2, setDigito2] = useState(0);
-	const [digito3, setDigito3] = useState(0);
-	const [digito4, setDigito4] = useState(0);
-	const [digito5, setDigito5] = useState(0);
-	const [digito6, setDigito6] = useState(0);
+    const [myInterval, setMyInterval] = useState(null);
+    const [digito1, setDigito1] = useState(0);
+    const [digito2, setDigito2] = useState(0);
+    const [digito3, setDigito3] = useState(0);
+    const [digito4, setDigito4] = useState(0);
+    const [digito5, setDigito5] = useState(0);
+    const [digito6, setDigito6] = useState(0);
 
-	useEffect(() => {
-		setInterval(function() {
-			setDigito1(digito1 => digito1 + 1);
-		}, 1000);
+    function intervalRecovery(digit) {
+        let interval = setInterval(function () {
+            setDigito1(Math.floor(digit / 1));
+            setDigito2(Math.floor(digit / 10));
+            setDigito3(Math.floor(digit / 100));
+            setDigito4(Math.floor(digit / 1000));
+            setDigito5(Math.floor(digit / 10000));
+            setDigito6(Math.floor(digit / 1000000));
+            digit++;
+        }, 1000);
 
-		setInterval(function() {
-			setDigito2(digito2 => digito2 + 1);
-		}, 10000);
+        setMyInterval(interval);
+    }
 
-		setInterval(function() {
-			setDigito3(digito3 => digito3 + 1);
-		}, 100000);
+    useEffect(() => {
+        intervalRecovery(0);
+    }, []);
 
-		setInterval(function() {
-			setDigito4(digito4 => digito4 + 1);
-		}, 1000000);
+    function stopCounter() {
+        clearInterval(myInterval);
+        setMyInterval(null);
+    }
 
-		setInterval(function() {
-			setDigito5(digito5 => digito5 + 1);
-		}, 10000000);
+    function startCounter() {
+        clearInterval(myInterval);
+        intervalRecovery(digito1);
+    }
 
-		setInterval(function() {
-			setDigito6(digito6 => digito6 + 1);
-		}, 100000000);
-	}, []);
+    function resetCounter() {
+        clearInterval(myInterval);
+        intervalRecovery(0);
+    }
 
-	if (digito1 > 9) {
-		setDigito1(digito1 => (digito1 = 0));
-	}
-	if (digito2 > 9) {
-		setDigito2(digito2 => (digito2 = 0));
-	}
-	if (digito3 > 9) {
-		setDigito3(digito3 => (digito3 = 0));
-	}
-	if (digito4 > 9) {
-		setDigito4(digito4 => (digito4 = 0));
-	}
-	if (digito5 > 9) {
-		setDigito5(digito5 => (digito5 = 0));
-	}
-	if (digito6 > 9) {
-		setDigito5(digito6 => (digito6 = 0));
-	}
+    let contenidos = [
+        { digito: digito6 % 10 },
+        { digito: digito5 % 10 },
+        { digito: digito4 % 10 },
+        { digito: digito3 % 10 },
+        { digito: digito2 % 10 },
+        { digito: digito1 % 10 }
+    ];
 
-	return (
-		<div className="container justify-content-center inline-block pt-5">
-			<div className="row">
-				<div className="col-7 mx-auto">
-					<div className="card-deck">
-						<Card number={<i className="far fa-clock"></i>} />
-						<Card number={String(digito6)} />
-						<Card number={String(digito5)} />
-						<Card number={String(digito4)} />
-						<Card number={String(digito3)} />
-						<Card number={String(digito2)} />
-						<Card number={String(digito1)} />
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+    return (
+        <div className="container justify-content-center pt-5">
+            <div className="row-1">
+                <div className="col-7 mx-auto">
+                    <div className="card-deck">
+                        <Card icon={<i className="far fa-clock"></i>} />
+                        {contenidos.map((contenido, index) => (
+                            <Card key={index} contenido={contenido.digito} />
+                        ))}
+                    </div>
+                </div>
+                <div className="row-2">
+                    <div className="col-3 mx-auto">
+                        <div
+                            className="btn btn-dark btn-lg text-white m-1"
+                            onClick={stopCounter}>
+                            <i className="fas fa-pause"></i>
+                        </div>
+                        <div
+                            className="btn btn-dark btn-lg text-white m-1"
+                            onClick={startCounter}>
+                            <i className="fas fa-play"></i>
+                        </div>
+                        <div
+                            className="btn btn-dark btn-lg text-white m-1"
+                            onClick={resetCounter}>
+                            <i className="fas fa-sync"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
